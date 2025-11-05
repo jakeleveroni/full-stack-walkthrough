@@ -1,0 +1,22 @@
+services:
+  fs-bun-postgres:
+    image: postgres:17
+    container_name: fs-bun-postgres
+    restart: unless-stopped
+    ports:
+      - "1338:5432"
+    environment:
+      POSTGRES_USER: ${ROOT_PGUSERNAME:-postgres}
+      POSTGRES_PASSWORD: ${ROOT_PGPASSWORD:-password}
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - fs-bun-network
+
+volumes:
+  pgdata:
+
+networks:
+  fs-bun-network:
+    driver: bridge
