@@ -1,4 +1,6 @@
 import { serve } from "bun";
+import { helloControllerDefinition } from "./api/hello-controller";
+import { usersControllerDefinition } from "./api/users-controller";
 import index from "./index.html";
 
 const server = serve({
@@ -6,36 +8,11 @@ const server = serve({
 		// Serve index.html for all unmatched routes.
 		"/*": index,
 
-		"/api/hello": {
-			async GET(req) {
-				return Response.json({
-					message: "Hello, world!",
-					method: "GET",
-				});
-			},
-			async PUT(req) {
-				return Response.json({
-					message: "Hello, world!",
-					method: "PUT",
-				});
-			},
-		},
+		// hello routes
+		...helloControllerDefinition,
 
-		"/api/hello/:name": async (req) => {
-			const name = req.params.name;
-			return Response.json({
-				message: `Hello, ${name}!`,
-			});
-		},
-
-		"/api/jake": {
-			GET: async (req) => {
-				return Response.json({
-					message: "Hello, Jake!",
-					method: "GET",
-				});
-			},
-		},
+		// users routes
+		...usersControllerDefinition,
 	},
 
 	development: process.env.NODE_ENV !== "production" && {
