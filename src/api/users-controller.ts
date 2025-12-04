@@ -1,3 +1,4 @@
+import { getAllUsers } from "@/data/users-collection";
 import { pg } from "@/services/database";
 import type { CreateUserRequest } from "@/types/user-dtos";
 
@@ -7,7 +8,8 @@ export const usersControllerDefinition = {
 		//  curl http://localhost:3000/api/users
 		GET: async () => {
 			try {
-				const users = await pg`select * from users`;
+				const users = await getAllUsers();
+				console.log("-------here", users);
 				return Response.json({ data: users });
 			} catch (error) {
 				return Response.json(
