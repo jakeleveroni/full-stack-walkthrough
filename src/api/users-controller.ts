@@ -9,7 +9,6 @@ export const usersControllerDefinition = {
 		GET: async () => {
 			try {
 				const users = await getAllUsers();
-				console.log("-------here", users);
 				return Response.json({ data: users });
 			} catch (error) {
 				return Response.json(
