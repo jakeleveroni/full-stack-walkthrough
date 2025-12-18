@@ -1,10 +1,36 @@
+# To run this file you can run `docker compose up`
+# to stop the containers this starts run `docker compose down`
+# To rebuild the containers, stop them then start them again with the --build flag `docker compose up --build`
 services:
+  # create our bun process container via the dockerfile and register it as a service called fs-bun-app
+  fs-bun-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fs-bun-app
+    restart: unless-stopped
+    ports:
+      - "4040:4040"
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4040
+      # Notice the hostname portion of this references `fs-bun-postgres:5432` inter-container communications reference the service name
+      DATABASE_URL: postgres://${ROOT_PGUSERNAME:-postgres}:${ROOT_PGPASSWORD:-password}@fs-bun-postgres:5432/postgres
+    depends_on:
+      - fs-bun-postgres
+    networks:
+      - fs-bun-network
+
+  # create a postgres container for our bun process to interact with
   fs-bun-postgres:
     image: postgres:17
     container_name: fs-bun-postgres
     restart: unless-stopped
-    ports:
-      - "1338:5432"
+    # REMOVE our port mapping so the container is not exposed externally and is only
+    #  accessible from inside the fs-bun-network which both services are on
+    # ports:
+    # - "1338:5432"
     environment:
       POSTGRES_USER: ${ROOT_PGUSERNAME:-postgres}
       POSTGRES_PASSWORD: ${ROOT_PGPASSWORD:-password}
