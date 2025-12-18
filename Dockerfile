@@ -62,5 +62,8 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=4040
 
+# set cwd to ./dist (as we noticed last time we need to run bun from the same level as the code, could probably fix in our code but not sure how rn)
+WORKDIR /app/dist
+
 # Start the bun server process
-CMD ["bun", "./dist/index.js"]
+CMD ["bun", "./index.js"]
