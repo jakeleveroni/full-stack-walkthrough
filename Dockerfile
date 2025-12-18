@@ -1,10 +1,17 @@
+# ---------------------------------------------
+# MULTI STAGE DOCKERFILE EXAMPLE
+# ---------------------------------------------
+
 # pull base image that comes with bun intalled
 FROM oven/bun:1 AS base
 
 # set out working directory to /app
 WORKDIR /app
 
+# ---------------------------------------------
 # STAGE 1 -- install deps
+# ---------------------------------------------
+
 # NOTE we can combine this layer and the build layer but the benefit of keeping them separate is that if only our source code changes and not our deps this
 # layer is cached and will not be re-built. So keeping it isolated can help for faster iteration when only source code changes
 
@@ -15,7 +22,9 @@ FROM base AS install
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
+# ---------------------------------------------
 # STAGE 2 -- bundle application
+# ---------------------------------------------
 
 # create new layer called `build`, this layer will be used to bundle out application
 FROM base AS build
@@ -29,8 +38,9 @@ COPY . .
 # now that we have the deps and source in our build layer bundle the app
 RUN bun run build
 
+# ---------------------------------------------
 #  STAGE 3 -- runtime configuration and startup
-
+# ---------------------------------------------
 FROM base AS runtime
 WORKDIR /app
 
