@@ -29,8 +29,8 @@ services:
     restart: unless-stopped
     # REMOVE our port mapping so the container is not exposed externally and is only
     #  accessible from inside the fs-bun-network which both services are on
-    # ports:
-    # - "1338:5432"
+    ports:
+      - "1338:5432"
     environment:
       POSTGRES_USER: ${ROOT_PGUSERNAME:-postgres}
       POSTGRES_PASSWORD: ${ROOT_PGPASSWORD:-password}
